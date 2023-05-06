@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Apr 2023 pada 17.10
--- Versi server: 10.4.27-MariaDB
--- Versi PHP: 8.2.0
+-- Waktu pembuatan: 06 Bulan Mei 2023 pada 09.43
+-- Versi server: 10.4.28-MariaDB
+-- Versi PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -112,7 +112,8 @@ CREATE TABLE `transaksi` (
 INSERT INTO `transaksi` (`id`, `tanggal`, `jam`, `kendaraan_id`, `customers_id`, `status`) VALUES
 (1, '2023-04-14', '15:00:00', 2, 2, 'Datang'),
 (3, '2023-04-14', '17:00:00', 12, 3, 'Datang'),
-(4, '2023-04-17', '16:00:00', 1, 2, 'Tidak Datang');
+(4, '2023-04-17', '16:00:00', 1, 2, 'Tidak Datang'),
+(5, '2023-05-06', '15:00:00', 1, 2, 'Belum Datang');
 
 -- --------------------------------------------------------
 
@@ -168,6 +169,7 @@ ALTER TABLE `list_kendaraan`
 --
 ALTER TABLE `transaksi`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `tanggal` (`tanggal`,`jam`) USING BTREE,
   ADD KEY `kendaraan_id` (`kendaraan_id`),
   ADD KEY `customer_id` (`customers_id`);
 
@@ -204,7 +206,7 @@ ALTER TABLE `list_kendaraan`
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `type`
