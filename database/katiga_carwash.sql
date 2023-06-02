@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Bulan Mei 2023 pada 09.43
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Waktu pembuatan: 24 Bulan Mei 2023 pada 10.23
+-- Versi server: 10.4.24-MariaDB
+-- Versi PHP: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,12 +29,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
-  `email` varchar(20) NOT NULL,
-  `password` char(64) NOT NULL,
-  `nama_lengkap` varchar(30) NOT NULL,
-  `no_telp` varchar(20) NOT NULL,
-  `role` enum('Admin','Customer') NOT NULL,
-  `status` varchar(10) NOT NULL
+  `email` varchar(20) COLLATE latin1_bin NOT NULL,
+  `password` char(64) COLLATE latin1_bin NOT NULL,
+  `nama_lengkap` varchar(30) COLLATE latin1_bin NOT NULL,
+  `no_telp` varchar(20) COLLATE latin1_bin NOT NULL,
+  `role` enum('Admin','Customer') COLLATE latin1_bin NOT NULL,
+  `status` varchar(10) COLLATE latin1_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `email`, `password`, `nama_lengkap`, `no_telp`, `role`, `status`) VALUES
-(1, 'admin@gmail.com', '$2y$10$XwhDa2Uls774FxI1qzpegeKxgDY96CUcKL188A8nOQ6PJ3LxUIzPm', 'Admin', '089629614608', 'Admin', 'Offline'),
+(1, 'admin@gmail.com', '$2y$10$XwhDa2Uls774FxI1qzpegeKxgDY96CUcKL188A8nOQ6PJ3LxUIzPm', 'Admin', '089629614608', 'Admin', 'Online'),
 (2, 'christian@gmail.com', '$2y$10$rXKydVX7UU/j7opbr59EH.PRioOR2os9xAlfrdcKQ3kakd23cgpT2', 'Christian', '081398897738', 'Customer', 'Offline'),
 (3, 'kristiana@gmail.com', '$2y$10$QMMOf.YFxuusZiZnDbQJ4u7fc4S0bnbbmSM7EwiGZIJJIJwVRf8he', 'Kristiana', '081578945612', 'Customer', 'Offline');
 
@@ -56,7 +56,7 @@ CREATE TABLE `harga` (
   `id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
   `harga` int(7) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `harga`
@@ -79,7 +79,7 @@ CREATE TABLE `list_kendaraan` (
   `nama_kendaraan` varchar(50) NOT NULL,
   `type_id` int(11) NOT NULL,
   `customers_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `list_kendaraan`
@@ -103,7 +103,7 @@ CREATE TABLE `transaksi` (
   `kendaraan_id` int(11) NOT NULL,
   `customers_id` int(11) NOT NULL,
   `status` enum('Belum Datang','Datang','Tidak Datang') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `transaksi`
@@ -113,7 +113,8 @@ INSERT INTO `transaksi` (`id`, `tanggal`, `jam`, `kendaraan_id`, `customers_id`,
 (1, '2023-04-14', '15:00:00', 2, 2, 'Datang'),
 (3, '2023-04-14', '17:00:00', 12, 3, 'Datang'),
 (4, '2023-04-17', '16:00:00', 1, 2, 'Tidak Datang'),
-(5, '2023-05-06', '15:00:00', 1, 2, 'Belum Datang');
+(5, '2023-05-06', '15:00:00', 1, 2, 'Belum Datang'),
+(7, '2023-05-25', '15:00:00', 1, 2, 'Datang');
 
 -- --------------------------------------------------------
 
@@ -124,7 +125,7 @@ INSERT INTO `transaksi` (`id`, `tanggal`, `jam`, `kendaraan_id`, `customers_id`,
 CREATE TABLE `type` (
   `id` int(11) NOT NULL,
   `nama_type` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `type`
@@ -206,7 +207,7 @@ ALTER TABLE `list_kendaraan`
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `type`

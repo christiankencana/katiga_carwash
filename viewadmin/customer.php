@@ -36,6 +36,11 @@ $rows = $stmt->fetchAll();
             <h1 class="h2">Customers</h1>
           </div>
 
+          <a class="btn btn-secondary" href="../app/report_vehicle.php" target="_blank">
+            <i class="fa-solid fa-file-pdf"></i>
+              Daftar Customer & Kendaraan
+          </a>
+
           <div class="table-responsive">
             <table class="table table-sm">
               <thead>

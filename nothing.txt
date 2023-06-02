@@ -1,0 +1,38 @@
+SELECT merged.bulan, merged.tahun, COALESCE(success.data_success, 0) AS data_success, COALESCE(failed.data_failed, 0) AS data_failed, COALESCE(jual.data_jual_success, 0) AS data_jual_success, COALESCE(jual_failed.data_jual_failed, 0) AS data_jual_failed
+FROM (
+    SELECT MONTHNAME(tanggal) AS bulan, YEAR(tanggal) AS tahun
+    FROM transaksi 
+	WHERE YEAR(tanggal) = '2023'
+    GROUP BY MONTHNAME(tanggal), YEAR(tanggal)
+) AS merged
+LEFT JOIN (
+    SELECT MONTHNAME(tanggal) AS bulan, YEAR(tanggal) AS tahun, COUNT(*) AS data_success
+    FROM transaksi
+    WHERE status = 'Datang' AND YEAR(tanggal) = '2023'
+    GROUP BY MONTHNAME(tanggal), YEAR(tanggal)
+) AS success ON merged.bulan = success.bulan AND merged.tahun = success.tahun
+LEFT JOIN (
+    SELECT MONTHNAME(tanggal) AS bulan, YEAR(tanggal) AS tahun, COUNT(*) AS data_failed
+    FROM transaksi
+    WHERE status = 'Tidak Datang' AND YEAR(tanggal) = '2023'
+    GROUP BY MONTHNAME(tanggal), YEAR(tanggal)
+) AS failed ON merged.bulan = failed.bulan AND merged.tahun = failed.tahun
+LEFT JOIN (
+    SELECT MONTHNAME(tanggal) AS bulan, YEAR(tanggal) AS tahun, SUM(h.harga) AS data_jual_success
+    FROM transaksi AS tr
+    JOIN list_kendaraan AS lk ON tr.kendaraan_id = lk.id
+    JOIN type AS ty ON lk.type_id = ty.id
+    JOIN harga AS h ON ty.id = h.type_id
+    WHERE status = 'Datang' AND YEAR(tanggal) = '2023'
+    GROUP BY MONTHNAME(tanggal), YEAR(tanggal)
+) AS jual ON merged.bulan = jual.bulan AND merged.tahun = jual.tahun
+LEFT JOIN (
+    SELECT MONTHNAME(tanggal) AS bulan, YEAR(tanggal) AS tahun, SUM(h.harga) AS data_jual_failed
+    FROM transaksi AS tr
+    JOIN list_kendaraan AS lk ON tr.kendaraan_id = lk.id
+    JOIN type AS ty ON lk.type_id = ty.id
+    JOIN harga AS h ON ty.id = h.type_id
+    WHERE status = 'Tidak Datang' AND YEAR(tanggal) = '2023'
+    GROUP BY MONTHNAME(tanggal), YEAR(tanggal)
+) AS jual_failed ON merged.bulan = jual_failed.bulan AND merged.tahun = jual_failed.tahun
+ORDER BY merged.tahun, MONTH(STR_TO_DATE(CONCAT('2000-', merged.bulan, '-01'), '%Y-%M-%d'));

@@ -43,6 +43,11 @@ $rows = $stmt->fetchAll();
             </div> -->
           </div>
 
+          <a class="btn btn-secondary" href="../app/report_logbook.php" target="_blank">
+            <i class="fa-solid fa-file-pdf"></i>
+              Log Booking
+          </a>
+
           <div class="table-responsive">
             <table class="table stripe row-border text-center table-bordered caption-top" id="" width="100%" cellspacing="0">
               <caption>History Customer Booking</caption>

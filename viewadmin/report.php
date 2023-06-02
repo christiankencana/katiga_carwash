@@ -2,107 +2,121 @@
 require("../config/config.php");
 require("../config/session.php");
 
-$query = "SELECT tr.id, tr.tanggal, tr.jam, lk.nama_kendaraan, ty.nama_type, h.harga, acc.id AS customers_id, acc.nama_lengkap, tr.status FROM transaksi AS tr
-JOIN list_kendaraan AS lk ON tr.kendaraan_id = lk.id
-JOIN type AS ty ON lk.type_id = ty.id
-JOIN harga AS h ON ty.id = h.type_id
-JOIN accounts AS acc ON lk.customers_id = acc.id 
-WHERE tr.status = 'DATANG';";
-try {
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-} catch (PDOException $ex) {
-    die("Failed to run query: " . $ex->getMessage());
-}
-$rows = $stmt->fetchAll();
+
+
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<?php include 'page-header.php' ?>
 
-<head>
-    <title>Laporan</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<body>
+<title>Admin - Katiga Carwash</title>
+<div class="container-fluid">
+    <div class="row">
 
-    <link rel = "icon" href="../resources/img/logo2.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
-    <style>
-        .report-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+    <?php include 'page-menu.php' ?>
 
-        .report-header h1 {
-            margin-top: 0;
-            font-size: 48px;
-        }
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mt-4 mb-3 border-bottom">
+                <h1 class="h2">Laporan</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <!-- <div class="btn-group me-2">
+                        <a href="" target="_blank">
+                        <i class="fa-solid fa-print"></i>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Print</button>
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                    </div> -->
+                    <!-- <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                        <span data-feather="calendar"></span>
+                        This week
+                    </button> -->
+                </div>
+            </div>
 
-        .report-header p {
-            font-size: 24px;
-        }
+            <div class="container">
+                <!-- <form action="" target="_blank" method="get" enctype="multipart/form-data">
+                    <div class="row g-3 mt-2">
+                        <label class="col-sm-3 col-form-label text-center">Laporan Booking Bulanan</label>
+                        <div class="col-sm-2">
+                            <select id="bulan" name="bulan" class="form-control" placeholder="Pilih Bulan" required></select>
+                        </div>
+                        <div class="col-sm-2">
+                            <select id="tahun" name="tahun" class="form-control"  placeholder="Pilih Tahun" required></select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-info">Cetak</button>
+                        </div>
+                    </div>
+                </form> -->
+                <form action="../app/report_bookyear.php" target="_blank" method="get" enctype="multipart/form-data">
+                    <div class="row g-3 mt-2">
+                        <label class="col-sm-3 col-form-label text-center">Laporan Booking Tahunan</label>
+                        <div class="col-sm-2">
+                            <select id="tahun2" name="tahun2" class="form-control" placeholder="Pilih Tahun" required></select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-info">Cetak</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-        .fa-chart-bar {
-            font-size: 64px;
-            color: #007bff;
-            margin-right: 20px;
-        }
-
-        @media only screen and (max-width: 768px) {
-            table {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-
-<body onload="printReport()">
-    <div class="container">
-        <div class="report-header">
-            <h3>
-                <img src="../resources/img/logo2.png" alt="Logo" width="100" height="100">
-                Laporan Booking
-            </h3>
-            <!-- <p>Ini adalah laporan contoh menggunakan HTML dan Bootstrap 5.</p> -->
-        </div>
-        <div class="table-responsive">
-            <table class="table stripe row-border text-center table-bordered" id="" width="100%" cellspacing="0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="text-center">Tanggal Booking</th>
-                        <th class="text-center">Jam Booking</th>
-                        <th class="text-center">Nama Kendaraan</th>
-                        <th class="text-center">Type Kendaraan</th>
-                        <th class="text-center">Nama Customer</th>
-                        <!-- <th class="text-center">Status</th> -->
-                        <th class="text-center">Harga</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $i = 1;
-                    foreach ($rows as $row) : ?>
-                        <tr>
-                            <td><?php echo $row['tanggal']; ?></td>
-                            <td><?php echo $row['jam']; ?></td>
-                            <td><?php echo $row['nama_kendaraan']; ?></td>
-                            <td><?php echo $row['nama_type']; ?></td>
-                            <td><?php echo $row['nama_lengkap']; ?></td>
-                            <!-- <td><?php echo $row['status']; ?></td> -->
-                            <td><?php echo "Rp. " . number_format($row['harga'],0,',','.');?></td>
-                        </tr>
-                        <?php include('./component/main_edit.php'); ?>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+            
+        </main>
     </div>
-    <script>
-        function printReport() {
-            window.print();
-        }
-    </script>
+</div>
+
+  <?php include 'page-footer.php' ?>
+  <script>
+    $(document).ready(function() {
+            $('table.table').DataTable({
+              "lengthChange": false,
+              "bPaginate": false,
+            });
+
+            // var selectmonth = document.getElementById("bulan");
+            // var months = [
+            //     "January", "February", "March", "April", "May", "June",
+            //     "July", "August", "September", "October", "November", "December"
+            // ];
+            // var currentMonth = new Date().getMonth();
+            // for (var i = 0; i < months.length; i++) {
+            //     var option = document.createElement("option");
+            //     option.text = months[i];
+            //     option.value = i + 1;
+            //     selectmonth.add(option);
+            // }
+            // selectmonth.value = currentMonth + 1;
+
+            // var selectyear = document.getElementById("tahun");
+            // var currentYear = new Date().getFullYear();
+            // var minYear = currentYear - 5; // Change this value to set the minimum tahun
+            // var maxYear = currentYear + 5; // Change this value to set the maximum tahun
+            // for (var tahun = minYear; tahun <= maxYear; tahun++) {
+            //     var option = document.createElement("option");
+            //     option.text = tahun;
+            //     option.value = tahun;
+            //     selectyear.add(option);
+            // }
+            // selectyear.value = currentYear;
+
+            /////////////////////////////////////////////////////////////////////////////
+            var selectyear = document.getElementById("tahun2");
+            var currentYear = new Date().getFullYear();
+            var minYear = currentYear - 5; // Change this value to set the minimum tahun
+            var maxYear = currentYear + 5; // Change this value to set the maximum tahun
+            for (var tahun = minYear; tahun <= maxYear; tahun++) {
+                var option = document.createElement("option");
+                option.text = tahun;
+                option.value = tahun;
+                selectyear.add(option);
+            }
+            selectyear.value = currentYear;
+        });
+  </script>
+
 </body>
 
 </html>
